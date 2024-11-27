@@ -11,7 +11,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                sh 'python test.py'
+                sh 'python3 asd.py'
             }
         }
         stage('Test') {
