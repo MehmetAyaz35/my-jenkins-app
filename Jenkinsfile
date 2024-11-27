@@ -38,7 +38,7 @@ pipeline {
                 // Test bağımlılıklarını yükle ve testleri çalıştır
                 sh '''
                 . venv/bin/activate
-                pip install pytest pytest-junitxml
+            
                 pytest --junitxml=report.xml
                 '''
                 junit 'report.xml' // Test raporlarını Jenkins'e ilet
