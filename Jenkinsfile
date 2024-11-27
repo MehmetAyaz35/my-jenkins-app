@@ -37,7 +37,7 @@ pipeline {
                 echo 'Running tests...'
                 // Test bağımlılıklarını yükle ve testleri çalıştır
                 sh '''
-                source venv/bin/activate
+                . venv/bin/activate
                 pip install pytest pytest-junitxml
                 pytest --junitxml=report.xml
                 '''
