@@ -1,1 +1,1 @@
-pytest
+python3-pytest
