@@ -26,7 +26,7 @@ pipeline {
                 echo 'Building the application...'
                 // Virtual environment kullanarak uygulamayı çalıştır
                 sh '''
-                source venv/bin/activate
+                . venv/bin/activate
                 python3 app.py
                 '''
             }
