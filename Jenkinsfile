@@ -5,33 +5,42 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out code...'
-                // GitHub'dan kodları çek
                 checkout scm
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies...'
-                // Gerekli Python bağımlılıklarını yükle
-                sh 'pip install -r requirements.txt || echo "No requirements file"'
+                echo 'Creating virtual environment and installing dependencies...'
+                // Virtual environment oluştur ve bağımlılıkları yükle
+                sh '''
+                python3 -m venv venv
+                source venv/bin/activate
+                pip install -r requirements.txt || echo "No requirements file"
+                '''
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                // Uygulamayı çalıştırma
-                sh 'python app.py'
+                // Virtual environment kullanarak uygulamayı çalıştır
+                sh '''
+                source venv/bin/activate
+                python app.py
+                '''
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                // Pytest'i yükle ve testleri çalıştır
-                sh 'pip install pytest pytest-junitxml'
-                sh 'pytest --junitxml=report.xml'
+                // Test bağımlılıklarını yükle ve testleri çalıştır
+                sh '''
+                source venv/bin/activate
+                pip install pytest pytest-junitxml
+                pytest --junitxml=report.xml
+                '''
                 junit 'report.xml' // Test raporlarını Jenkins'e ilet
             }
         }
@@ -39,7 +48,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
-                // Deploy aşaması: burada deploy scripti veya işlemleri yer alır
+                // Deploy aşaması
                 sh './deploy.sh || echo "No deployment script found"'
             }
         }
@@ -48,14 +57,14 @@ pipeline {
     post {
         always {
             echo 'Cleaning up workspace...'
-            cleanWs() // Workspace temizliği
+            cleanWs()
         }
         success {
             echo 'Pipeline completed successfully!'
         }
         failure {
             echo 'Pipeline failed. Sending notification...'
-            // Başarısızlık durumunda yapılacaklar
         }
     }
 }
+
