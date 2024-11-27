@@ -15,7 +15,7 @@ pipeline {
                 // Virtual environment oluştur ve bağımlılıkları yükle
                 sh '''
                 python3 -m venv venv
-                source venv/bin/activate
+                . venv/bin/activate
                 pip install -r requirements.txt || echo "No requirements file"
                 '''
             }
